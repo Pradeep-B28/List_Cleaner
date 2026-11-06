@@ -1,0 +1,209 @@
+/* Motion and animation styles */
+
+/* App Loader */
+.app-loader {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  /* CSS failsafe: removes loader after 2s even if JS crashes */
+  animation: loaderFailsafe 250ms var(--ease-out) 2000ms forwards;
+}
+
+html.intro-seen .app-loader {
+  display: none !important;
+}
+
+.loader-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-xl);
+}
+
+.loader-logo {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+.loader-animation {
+  width: 96px;
+  height: 64px;
+}
+
+/* Three list lines sliding together */
+.loader-line {
+  transform-origin: center;
+  transition: transform var(--dur-med) var(--ease-out), opacity var(--dur-med) var(--ease-out);
+}
+
+.loader-line-1 {
+  animation: slideToCenter1 600ms var(--ease-out) forwards;
+}
+
+.loader-line-2 {
+  animation: pulseCenter2 600ms var(--ease-out) forwards;
+}
+
+.loader-line-3 {
+  animation: slideToCenter3 600ms var(--ease-out) forwards;
+}
+
+@keyframes slideToCenter1 {
+  0% { transform: translateY(0); opacity: 1; }
+  60% { transform: translateY(12px); opacity: 0.4; }
+  100% { transform: translateY(12px); opacity: 0; }
+}
+
+@keyframes pulseCenter2 {
+  0% { transform: scaleX(0.7); opacity: 0.8; }
+  60% { transform: scaleX(1); opacity: 1; }
+  100% { transform: scaleX(1.1); opacity: 0; }
+}
+
+@keyframes slideToCenter3 {
+  0% { transform: translateY(0); opacity: 1; }
+  60% { transform: translateY(-12px); opacity: 0.4; }
+  100% { transform: translateY(-12px); opacity: 0; }
+}
+
+/* Tick icon appearance */
+.loader-tick {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: drawTick 300ms var(--ease-out) 450ms forwards;
+}
+
+@keyframes drawTick {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Thin gradient progress bar */
+.loader-bar-wrap {
+  width: 140px;
+  height: 3px;
+  background: var(--surface-2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.loader-bar-fill {
+  width: 100%;
+  height: 100%;
+  background: var(--brand-grad);
+  transform: translateX(-100%);
+  animation: fillLoaderBar 700ms var(--ease-out) forwards;
+}
+
+@keyframes fillLoaderBar {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(0%); }
+}
+
+/* Loader fade out */
+.app-loader.fade-out {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 250ms var(--ease-out);
+}
+
+@keyframes loaderFailsafe {
+  to {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+  }
+}
+
+/* Hero entrance after loader */
+body.hero-animated .hero-section {
+  animation: heroRise 350ms var(--ease-out) forwards;
+}
+
+@keyframes heroRise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scan line sweep */
+.scan-line.scanning {
+  opacity: 1;
+  animation: scanSweep var(--dur-scan) var(--ease-out) forwards;
+}
+
+@keyframes scanSweep {
+  0% {
+    top: 0;
+    opacity: 1;
+  }
+  90% {
+    top: calc(100% - 3px);
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+/* Button sweep shine */
+.btn-primary.shine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  animation: btnShine var(--dur-scan) var(--ease-out) forwards;
+}
+
+@keyframes btnShine {
+  to {
+    left: 100%;
+  }
+}
+
+/* Pulse on paste */
+@keyframes pastePulse {
+  0% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(5, 150, 105, 0.15); }
+  100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
+}
+
+.pulse-paste {
+  animation: pastePulse 400ms var(--ease-out) 1;
+}
+
+/* Theme toggle rotation */
+.theme-toggle-btn:active svg {
+  transform: rotate(45deg) scale(0.9);
+}
+
+/* Reduced Motion Overrides */
+@media (prefers-reduced-motion: reduce) {
+  .app-loader {
+    display: none !important;
+  }
+
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

@@ -1,0 +1,79 @@
+/* Design tokens for List Cleaner */
+:root {
+  /* Colors - Light Theme */
+  --bg: #FFFFFF;
+  --bg-grad: linear-gradient(135deg, #ECFDF5 0%, #FFFFFF 45%, #ECFEFF 100%);
+  --surface: #FFFFFF;
+  --surface-2: #F3F4F6;
+  --border: #E5E7EB;
+  --text: #111827;
+  --text-2: #374151;
+  --muted: #6B7280;
+  --brand: #059669;
+  --brand-strong: #047857;
+  --brand-soft: #D1FAE5;
+  --accent: #0891B2;
+  --kept: #059669;
+  --dup: #0891B2;
+  --bad: #B45309;
+
+  /* Brand Gradient */
+  --brand-grad: linear-gradient(90deg, #059669, #0D9488, #06B6D4);
+
+  /* Shadows - Light Theme */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.10), 0 1px 2px -1px rgba(0,0,0,0.10);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.10), 0 2px 4px -2px rgba(0,0,0,0.10);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.10), 0 4px 6px -4px rgba(0,0,0,0.10);
+
+  /* Typography */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Shapes & Radii */
+  --radius-btn: 999px;
+  --radius-card: 16px;
+  --radius-box: 12px;
+
+  /* Spacing */
+  --space-2xs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* Timing & Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 150ms;
+  --dur-med: 250ms;
+  --dur-scan: 450ms;
+  --dur-count: 700ms;
+  --dur-loader: 800ms;
+}
+
+[data-theme="dark"] {
+  /* Colors - Dark Theme */
+  --bg: #0F172A;
+  --bg-grad: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+  --surface: #1E293B;
+  --surface-2: #334155;
+  --border: #334155;
+  --text: #F1F5F9;
+  --text-2: #CBD5E1;
+  --muted: #94A3B8;
+  --brand: #10B981;
+  --brand-strong: #34D399;
+  --brand-soft: rgba(16,185,129,0.15);
+  --accent: #22D3EE;
+  --kept: #34D399;
+  --dup: #22D3EE;
+  --bad: #FBBF24;
+
+  /* Shadows - Dark Theme */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.40), 0 1px 2px -1px rgba(0,0,0,0.40);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.40), 0 2px 4px -2px rgba(0,0,0,0.40);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.40), 0 4px 6px -4px rgba(0,0,0,0.40);
+}

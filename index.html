@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; manifest-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>List Cleaner | Wrench Wise</title>
+  <meta name="description" content="Paste phone numbers or emails. Duplicates go, formats get fixed, and you get a clean list to copy or download.">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F172A">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="List Cleaner | Wrench Wise">
+  <meta property="og:description" content="Paste phone numbers or emails. Duplicates go, formats get fixed, and you get a clean list to copy or download.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="og-image.png">
+
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="stylesheet" href="styles/motion.css">
+
+  <script src="js/theme-init.js"></script>
+</head>
+<body>
+  <!-- Accessible skip link -->
+  <a href="#list" class="skip-link">Skip to input</a>
+
+  <!-- First visit session loader -->
+  <div id="app-loader" class="app-loader" aria-hidden="true">
+    <div class="loader-card">
+      <img src="assets/logo.png" alt="Wrench Wise" class="loader-logo" width="160" height="40">
+      <svg class="loader-animation" viewBox="0 0 96 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Three messy lines sliding together -->
+        <rect class="loader-line loader-line-1" x="20" y="16" width="56" height="4" rx="2" fill="#059669"/>
+        <rect class="loader-line loader-line-2" x="20" y="28" width="44" height="4" rx="2" fill="#0D9488"/>
+        <rect class="loader-line loader-line-3" x="20" y="40" width="50" height="4" rx="2" fill="#06B6D4"/>
+        <!-- Drawn tick mark on completion -->
+        <circle cx="74" cy="30" r="10" fill="#059669"/>
+        <path class="loader-tick" d="M69 30 L72 33 L79 26" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="loader-bar-wrap">
+        <div class="loader-bar-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="https://wrench-wise.com" class="brand-wrapper" target="_blank" rel="noopener noreferrer">
+        <img id="brand-logo" src="assets/logo.png" alt="Wrench Wise" class="brand-logo-img" width="160" height="36">
+        <span id="brand-fallback" class="brand-fallback-text sr-only">Wrench Wise</span>
+        <span class="brand-badge">List Cleaner</span>
+      </a>
+
+      <button type="button" id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle light and dark theme">
+        <!-- Sun icon (for switching to light) -->
+        <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <!-- Moon icon (for switching to dark) -->
+        <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content">
+    <section class="hero-section">
+      <div class="container hero-grid">
+        <!-- Left Column: Heading and Input Card -->
+        <div class="hero-left">
+          <header class="hero-header">
+            <span class="hero-eyebrow">Free list cleaner</span>
+            <h1 class="hero-title">Clean any contact list in one click.</h1>
+            <p class="hero-sub">Paste phone numbers or emails. Duplicates go, formats get fixed, and you get a clean list to copy or download.</p>
+          </header>
+
+          <section class="card input-card" aria-label="List input">
+            <div class="input-header">
+              <label for="list" class="input-label">Your list</label>
+              <span id="line-count" class="line-count-badge tabular">0 lines</span>
+            </div>
+
+            <div class="textarea-wrapper">
+              <textarea id="list" autocomplete="off" spellcheck="false" autocapitalize="off" autocorrect="off" data-1p-ignore data-lpignore="true" placeholder="Paste phone numbers or emails here. One per line, or mixed in with names and text."></textarea>
+              <div id="scan-line" class="scan-line" aria-hidden="true"></div>
+            </div>
+
+            <noscript>
+              <p class="input-privacy-note">This page needs JavaScript to run.</p>
+            </noscript>
+
+            <div class="btn-row">
+              <button type="button" id="btn-clean" class="btn btn-primary">Clean list</button>
+              <button type="button" id="btn-sample" class="btn btn-secondary">Try a messy sample</button>
+              <button type="button" id="btn-paste" class="btn btn-secondary">Paste</button>
+              <button type="button" id="btn-open" class="btn btn-secondary">Open a file</button>
+              <input type="file" id="file-input" accept=".csv,.txt" class="sr-only">
+              <button type="button" id="btn-clear" class="btn btn-ghost">Clear</button>
+              <span class="shortcut-hint">Ctrl + Enter also cleans</span>
+            </div>
+
+            <div class="input-privacy-note">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              <span>Nothing you paste is stored or sent. It all runs on your device.</span>
+            </div>
+          </section>
+        </div>
+
+        <!-- Right Column: Result Card -->
+        <div class="hero-right">
+          <section id="result-card" class="card result-card" aria-label="Cleaning results">
+            <!-- Empty state illustration -->
+            <div id="result-empty" class="empty-state">
+              <svg class="empty-state-svg" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <!-- Messy lines on left -->
+                <rect x="16" y="26" width="36" height="6" rx="3" fill="#E5E7EB"/>
+                <rect x="16" y="40" width="46" height="6" rx="3" fill="#E5E7EB"/>
+                <rect x="22" y="54" width="38" height="6" rx="3" fill="#F87171" opacity="0.6"/>
+                <rect x="16" y="68" width="42" height="6" rx="3" fill="#E5E7EB"/>
+                <rect x="20" y="82" width="40" height="6" rx="3" fill="#F87171" opacity="0.6"/>
+                <rect x="16" y="96" width="32" height="6" rx="3" fill="#E5E7EB"/>
+
+                <!-- Transformation Arrow in center -->
+                <path d="M66 65 L76 70 L66 75" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+                <!-- Clean, sorted, ticked lines on right -->
+                <rect x="86" y="32" width="40" height="6" rx="3" fill="#059669"/>
+                <circle cx="78" cy="35" r="4" fill="#10B981"/>
+                <rect x="86" y="52" width="36" height="6" rx="3" fill="#0D9488"/>
+                <circle cx="78" cy="55" r="4" fill="#14B8A6"/>
+                <rect x="86" y="72" width="42" height="6" rx="3" fill="#0891B2"/>
+                <circle cx="78" cy="75" r="4" fill="#06B6D4"/>
+                <rect x="86" y="92" width="34" height="6" rx="3" fill="#0284C7"/>
+                <circle cx="78" cy="95" r="4" fill="#38BDF8"/>
+              </svg>
+              <h2 class="empty-title">Your clean list shows up here.</h2>
+              <p class="empty-sub">Paste a list, or try the messy sample.</p>
+            </div>
+
+            <!-- Live result container (populated in Phase 2) -->
+            <div id="result-live" class="result-content" aria-hidden="true">
+              <h2 id="result-headline" class="result-headline tabular"></h2>
+              <p id="result-split" class="result-split tabular"></p>
+              <div id="stat-tiles-grid" class="stat-tiles-grid"></div>
+              <div id="result-bar-wrap" class="result-bar-wrap"></div>
+              <div id="merge-moment-wrap" class="merge-moment-wrap"></div>
+              <p id="result-skipped-note" class="result-skipped-note"></p>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- Output Panel Container (built in Phase 3) -->
+    <section id="output-panel-section" class="output-panel-section" aria-hidden="true"></section>
+
+    <!-- Additional Sections (built in Phase 3) -->
+    <div id="extra-sections"></div>
+  </main>
+
+  <!-- Mobile Sticky Bar for quick Clean action -->
+  <div id="mobile-sticky-bar" class="mobile-sticky-bar" aria-hidden="true">
+    <button type="button" id="btn-clean-mobile" class="btn btn-primary">Clean list</button>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span class="footer-brand">Built by Wrench Wise</span>
+      <span class="footer-privacy">Nothing you paste here is stored or sent.</span>
+    </div>
+  </footer>
+
+  <!-- Polite aria-live region announcing only result.headline -->
+  <div id="live-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Main JavaScript module -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

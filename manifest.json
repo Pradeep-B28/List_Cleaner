@@ -1,0 +1,21 @@
+{
+  "name": "List Cleaner | Wrench Wise",
+  "short_name": "List Cleaner",
+  "description": "Clean any contact list in one click. Duplicates go, formats get fixed.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#059669",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "assets/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
