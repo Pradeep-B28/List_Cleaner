@@ -149,7 +149,10 @@ document.addEventListener("DOMContentLoaded", () => {
   initScrollReveal();
 
   initLoader(() => {
-    // Shell ready
+    // Check if ?test=1 was requested
+    if (new URLSearchParams(window.location.search).get("test") === "1") {
+      import("./selftest.js").then((mod) => mod.runSelfTest());
+    }
   });
 });
 
