@@ -174,3 +174,28 @@ export function countUpNumber(element, targetVal, durationMs) {
   const id = requestAnimationFrame(tick);
   activeCountUps.push(id);
 }
+
+export function initScrollReveal() {
+  if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
+    const reveals = document.querySelectorAll(".reveal-on-scroll");
+    for (const el of reveals) {
+      el.classList.add("is-revealed");
+    }
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries, obs) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-revealed");
+        obs.unobserve(entry.target);
+      }
+    }
+  }, { threshold: 0.1 });
+
+  const elements = document.querySelectorAll(".reveal-on-scroll");
+  for (const el of elements) {
+    observer.observe(el);
+  }
+}
+

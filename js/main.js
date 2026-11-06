@@ -2,20 +2,22 @@
 import { CONFIG } from "../config.js";
 import { cleanList } from "./engine/cleaner.js";
 import { getTheme, setTheme } from "./store.js";
-import { initLoader, triggerScan, prefersReducedMotion } from "./motion.js";
+import { initLoader, triggerScan, prefersReducedMotion, initScrollReveal } from "./motion.js";
 import { initInputUI } from "./input-ui.js";
 import { renderResult, renderEmpty } from "./result-ui.js";
+import { initOutputUI, updateOutputResult, switchTab, getCurrentFormat } from "./output-ui.js";
+import { renderSections, updateDsaStats } from "./sections-ui.js";
 
 // State: raw text and cleaned results held only in memory (Rule 4)
 let currentText = "";
 let currentResult = null;
-let currentFormat = CONFIG.defaultFormat || "e164";
 
 function doClean(text) {
   currentText = text || "";
   if (!currentText.trim()) {
     currentResult = { empty: true };
     renderEmpty();
+    updateOutputResult(null);
     return;
   }
 
@@ -24,15 +26,30 @@ function doClean(text) {
 
   // 2. Scan moment animation
   triggerScan(() => {
+    const curFormat = getCurrentFormat();
+
     // 3. Render results
     renderResult(currentResult, {
-      format: currentFormat,
+      format: curFormat,
       onSelectTab: (tabId) => {
-        // Will be wired in Phase 3
+        switchTab(tabId);
+        const panelSec = document.getElementById("output-panel-section");
+        if (panelSec) {
+          panelSec.scrollIntoView({
+            behavior: prefersReducedMotion() ? "auto" : "smooth",
+            block: "start"
+          });
+        }
       }
     });
 
-    // 4. Mobile scroll to result card
+    // 4. Update output panel and DSA cards
+    updateOutputResult(currentResult);
+    if (currentResult.dsa) {
+      updateDsaStats(currentResult.dsa);
+    }
+
+    // 5. Mobile scroll to result card
     if (window.innerWidth < 1024) {
       const resultCard = document.getElementById("result-card");
       if (resultCard) {
@@ -49,6 +66,7 @@ function doClear() {
   currentText = "";
   currentResult = null;
   renderEmpty();
+  updateOutputResult(null);
 }
 
 function setupThemeToggle() {
@@ -86,6 +104,7 @@ window.addEventListener("pagehide", () => {
   const listEl = document.getElementById("list");
   if (listEl) listEl.value = "";
   renderEmpty();
+  updateOutputResult(null);
 });
 
 // Initialize on DOM load
@@ -94,6 +113,8 @@ document.addEventListener("DOMContentLoaded", () => {
   setupBrandFallback();
 
   const listEl = document.getElementById("list");
+  const outputSection = document.getElementById("output-panel-section");
+  const extraSections = document.getElementById("extra-sections");
 
   initInputUI({
     onClean: (text) => doClean(text),
@@ -105,7 +126,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  if (outputSection) {
+    initOutputUI(outputSection, {
+      onFormatChange: (newFormat) => {
+        if (currentResult && !currentResult.empty) {
+          renderResult(currentResult, {
+            format: newFormat,
+            onSelectTab: (tabId) => {
+              switchTab(tabId);
+            }
+          });
+        }
+      }
+    });
+  }
+
+  if (extraSections) {
+    renderSections(extraSections);
+  }
+
   renderEmpty();
+  initScrollReveal();
 
   initLoader(() => {
     // Shell ready
