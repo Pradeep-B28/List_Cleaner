@@ -1,35 +1,54 @@
 // Main entry point for List Cleaner
 import { CONFIG } from "../config.js";
-import { COPY, t } from "./copy.js";
-import { fmt } from "./engine/cleaner.js";
+import { cleanList } from "./engine/cleaner.js";
 import { getTheme, setTheme } from "./store.js";
-import { initLoader } from "./motion.js";
+import { initLoader, triggerScan, prefersReducedMotion } from "./motion.js";
+import { initInputUI } from "./input-ui.js";
+import { renderResult, renderEmpty } from "./result-ui.js";
 
-// State holds the raw text and cleaned results only in memory (Rule 4)
+// State: raw text and cleaned results held only in memory (Rule 4)
 let currentText = "";
 let currentResult = null;
+let currentFormat = CONFIG.defaultFormat || "e164";
 
-function updateLineCount(text) {
-  const lineCountBadge = document.getElementById("line-count");
-  if (!lineCountBadge) return;
-  if (!text) {
-    lineCountBadge.textContent = t("input.lines", { lines: "0" });
+function doClean(text) {
+  currentText = text || "";
+  if (!currentText.trim()) {
+    currentResult = { empty: true };
+    renderEmpty();
     return;
   }
-  const lines = text.split(/\r\n|\r|\n/).length;
-  lineCountBadge.textContent = t("input.lines", { lines: fmt(lines) });
+
+  // 1. Run engine immediately
+  currentResult = cleanList(currentText, { gmailRule: CONFIG.gmailRule });
+
+  // 2. Scan moment animation
+  triggerScan(() => {
+    // 3. Render results
+    renderResult(currentResult, {
+      format: currentFormat,
+      onSelectTab: (tabId) => {
+        // Will be wired in Phase 3
+      }
+    });
+
+    // 4. Mobile scroll to result card
+    if (window.innerWidth < 1024) {
+      const resultCard = document.getElementById("result-card");
+      if (resultCard) {
+        resultCard.scrollIntoView({
+          behavior: prefersReducedMotion() ? "auto" : "smooth",
+          block: "start"
+        });
+      }
+    }
+  });
 }
 
-function updateMobileStickyBar(hasText) {
-  const stickyBar = document.getElementById("mobile-sticky-bar");
-  if (!stickyBar) return;
-  if (hasText) {
-    stickyBar.classList.add("visible");
-    stickyBar.removeAttribute("aria-hidden");
-  } else {
-    stickyBar.classList.remove("visible");
-    stickyBar.setAttribute("aria-hidden", "true");
-  }
+function doClear() {
+  currentText = "";
+  currentResult = null;
+  renderEmpty();
 }
 
 function setupThemeToggle() {
@@ -60,48 +79,33 @@ function setupBrandFallback() {
   });
 }
 
-function setupFeatureSwitches() {
-  if (!CONFIG.features) return;
-  if (CONFIG.features.pasteButton === false) {
-    const pasteBtn = document.getElementById("btn-paste");
-    if (pasteBtn) pasteBtn.style.display = "none";
-  }
-  if (CONFIG.features.fileOpen === false) {
-    const openBtn = document.getElementById("btn-open");
-    if (openBtn) openBtn.style.display = "none";
-  }
-}
-
-function setupInputListeners() {
-  const listEl = document.getElementById("list");
-  if (!listEl) return;
-
-  listEl.addEventListener("input", () => {
-    currentText = listEl.value;
-    updateLineCount(currentText);
-    updateMobileStickyBar(currentText.trim().length > 0);
-  });
-}
-
 // Rule 4: Clear box and results on pagehide
 window.addEventListener("pagehide", () => {
   currentText = "";
   currentResult = null;
   const listEl = document.getElementById("list");
   if (listEl) listEl.value = "";
+  renderEmpty();
 });
 
-// Initialize shell
+// Initialize on DOM load
 document.addEventListener("DOMContentLoaded", () => {
   setupThemeToggle();
   setupBrandFallback();
-  setupFeatureSwitches();
-  setupInputListeners();
 
   const listEl = document.getElementById("list");
-  if (listEl) {
-    updateLineCount(listEl.value);
-  }
+
+  initInputUI({
+    onClean: (text) => doClean(text),
+    onClear: () => doClear(),
+    getText: () => currentText,
+    setText: (newText) => {
+      currentText = newText;
+      if (listEl) listEl.value = newText;
+    }
+  });
+
+  renderEmpty();
 
   initLoader(() => {
     // Shell ready

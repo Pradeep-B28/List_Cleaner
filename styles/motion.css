@@ -195,6 +195,84 @@ body.hero-animated .hero-section {
   transform: rotate(45deg) scale(0.9);
 }
 
+/* Stat tile stagger animation */
+.stat-tile {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.result-content.animated .stat-tile:nth-child(1) {
+  animation: tileFadeIn 250ms var(--ease-out) 0ms forwards;
+}
+
+.result-content.animated .stat-tile:nth-child(2) {
+  animation: tileFadeIn 250ms var(--ease-out) 40ms forwards;
+}
+
+.result-content.animated .stat-tile:nth-child(3) {
+  animation: tileFadeIn 250ms var(--ease-out) 80ms forwards;
+}
+
+.result-content.animated .stat-tile:nth-child(4) {
+  animation: tileFadeIn 250ms var(--ease-out) 120ms forwards;
+}
+
+@keyframes tileFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stacked bar animation */
+.bar-part.animate-bar {
+  transform: scaleX(0);
+  animation: barGrow 450ms var(--ease-out) 150ms forwards;
+}
+
+@keyframes barGrow {
+  0% { transform: scaleX(0); }
+  85% { transform: scaleX(1.03); }
+  100% { transform: scaleX(1); }
+}
+
+/* Merge moment animations */
+.merge-chips-stage.merging .chip-source {
+  animation: chipsSlideTogether 350ms var(--ease-out) forwards;
+}
+
+@keyframes chipsSlideTogether {
+  0% { transform: scale(1); opacity: 1; }
+  70% { transform: scale(0.9) translateX(10px); opacity: 0.5; }
+  100% { transform: scale(0.6); opacity: 0; }
+}
+
+.chip-merged.pop {
+  animation: mergedPop 300ms var(--ease-out) 200ms forwards;
+}
+
+@keyframes mergedPop {
+  0% { transform: scale(0.85); opacity: 0; }
+  75% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.merge-badge.pop {
+  animation: badgePop 250ms var(--ease-out) 350ms forwards;
+}
+
+@keyframes badgePop {
+  0% { transform: scale(0); }
+  80% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* Clear fade transition */
+.fade-clear {
+  opacity: 0;
+  transition: opacity 180ms var(--ease-out);
+}
+
 /* Reduced Motion Overrides */
 @media (prefers-reduced-motion: reduce) {
   .app-loader {
